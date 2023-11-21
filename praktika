@@ -1,0 +1,49 @@
+rom sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey
+from sqlalchemy.orm import declarative_base, Session, relationship
+
+Base = declarative_base()
+
+class Student(Base):
+    __tablename__ = 'students'
+    student_id = Column(Integer, primary_key=True)
+    first_name = Column(String(50))
+    last_name = Column(String(50))
+    group_id = Column(Integer, ForeignKey('student_groups.group_id'))
+    grades = relationship("Grade", back_populates="student")
+
+class Teacher(Base):
+    __tablename__ = 'teachers'
+    teacher_id = Column(Integer, primary_key=True)
+    first_name = Column(String(50))
+    last_name = Column(String(50))
+    subject_id = Column(Integer, ForeignKey('subjects.subject_id'))
+    grades = relationship("Grade", back_populates="teacher")
+
+class Subject(Base):
+    __tablename__ = 'subjects'
+    subject_id = Column(Integer, primary_key=True)
+    subject_name = Column(String(50))
+    teachers = relationship("Teacher", back_populates="subject")
+    grades = relationship("Grade", back_populates="subject")
+
+class StudentGroup(Base):
+    __tablename__ = 'student_groups'
+    group_id = Column(Integer, primary_key=True)
+    group_name = Column(String(50))
+    students = relationship("Student", back_populates="group")
+
+class Grade(Base):
+    __tablename__ = 'grades'
+    grade_id = Column(Integer, primary_key=True)
+    student_id = Column(Integer, ForeignKey('students.student_id'))
+    subject_id = Column(Integer, ForeignKey('subjects.subject_id'))
+    teacher_id = Column(Integer, ForeignKey('teachers.teacher_id'))
+    grade = Column(Float)
+    student = relationship("Student", back_populates="grades")
+    teacher = relationship("Teacher", back_populates="grades")
+    subject = relationship("Subject", back_populates="grades")
+
+# Create an SQLite database in memory for this example
+engine = create_engine('sqlite:///:memory:')
+Base.metadata.create_all(engine)
+session = Session(engine)
