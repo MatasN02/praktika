@@ -1,12 +1,13 @@
-import logging
+import sqlite3
 
 class AcademicSystem:
     def __init__(self):
-        # ... (existing code)
-        logging.basicConfig(filename='academic_system.log', level=logging.INFO)
+        try:
+            self.conn = sqlite3.connect(":memory:")  # In-memory SQLite database
+            self.cursor = self.conn.cursor()
+            self.create_tables()
+        except sqlite3.Error as e:
+            print(f"Error connecting to the database: {e}")
+            raise
 
-    def log_event(self, message):
-        logging.info(message)
-        print(message)  # Print for immediate visibility during development
-
-    # ... (log relevant events in other methods)
+    # ... (rest of the class remains unchanged)
