@@ -1,23 +1,13 @@
-import hashlib
-
 class AcademicSystem:
     # ... (existing code)
 
-    def hash_password(self, password):
-        # Use a secure hashing algorithm (e.g., SHA-256)
-        return hashlib.sha256(password.encode()).hexdigest()
+    def validate_input(self, *args):
+        for arg in args:
+            if arg is None or (isinstance(arg, str) and not arg.strip()):
+                raise ValueError("Invalid input. Please provide valid values.")
 
-    def register_teacher(self, first_name, last_name):
-        login_name = first_name
-        password = last_name
-        hashed_password = self.hash_password(password)
+    def register_student(self, first_name, last_name, group_id):
+        self.validate_input(first_name, last_name, group_id)
+        # ... (existing code)
 
-        # Store hashed password in the database
-        self.cursor.execute('''
-            INSERT INTO teachers (first_name, last_name, password)
-            VALUES (?, ?, ?)
-        ''', (first_name, last_name, hashed_password))
-        self.conn.commit()
-        return login_name, password  # Note: Returning plain password for demonstration purposes
-
-    # ... (similar changes for student registration)
+    # ... (similar changes for other methods)
