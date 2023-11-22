@@ -1,13 +1,19 @@
 class AcademicSystem:
     # ... (existing code)
 
-    def validate_input(self, *args):
-        for arg in args:
-            if arg is None or (isinstance(arg, str) and not arg.strip()):
-                raise ValueError("Invalid input. Please provide valid values.")
+    def update_student_info(self, student_id, new_first_name, new_last_name):
+        self.cursor.execute('''
+            UPDATE students
+            SET first_name = ?, last_name = ?
+            WHERE id = ?
+        ''', (new_first_name, new_last_name, student_id))
+        self.conn.commit()
 
-    def register_student(self, first_name, last_name, group_id):
-        self.validate_input(first_name, last_name, group_id)
-        # ... (existing code)
+    def remove_student(self, student_id):
+        self.cursor.execute('''
+            DELETE FROM students
+            WHERE id = ?
+        ''', (student_id,))
+        self.conn.commit()
 
-    # ... (similar changes for other methods)
+    # ... (similar changes for teacher operations)
