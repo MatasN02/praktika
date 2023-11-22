@@ -1,13 +1,13 @@
-import sqlite3
-
 class AcademicSystem:
-    def __init__(self):
-        try:
-            self.conn = sqlite3.connect(":memory:")  # In-memory SQLite database
-            self.cursor = self.conn.cursor()
-            self.create_tables()
-        except sqlite3.Error as e:
-            print(f"Error connecting to the database: {e}")
-            raise
+    # ... (existing code)
 
-    # ... (rest of the class remains unchanged)
+    def validate_input(self, *args):
+        for arg in args:
+            if arg is None or (isinstance(arg, str) and not arg.strip()):
+                raise ValueError("Invalid input. Please provide valid values.")
+
+    def register_student(self, first_name, last_name, group_id):
+        self.validate_input(first_name, last_name, group_id)
+        # ... (existing code)
+
+    # ... (similar changes for other methods)
